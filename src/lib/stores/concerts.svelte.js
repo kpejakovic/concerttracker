@@ -28,11 +28,17 @@ function createStore() {
 			return items;
 		},
 		add(concert) {
-			items = [...items, { ...concert, id: Date.now() }];
+			items = [...items, { ...concert, id: concert.id ?? Date.now() }];
 			persist();
 		},
 		remove(id) {
 			items = items.filter((c) => c.id !== id);
+			persist();
+		},
+		rate(id, rating, notes) {
+			items = items.map((c) =>
+				c.id === id ? { ...c, rating, ...(notes !== undefined ? { notes } : {}) } : c
+			);
 			persist();
 		}
 	};

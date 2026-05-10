@@ -23,8 +23,8 @@
 		<div class="card-top">
 			<span class="genre">{concert.genre}</span>
 			<div class="card-actions">
-				{#if past && concert.rating}
-					<span class="rating">{'★'.repeat(concert.rating)}{'☆'.repeat(5 - concert.rating)}</span>
+				{#if past}
+					<a href="/rate" class="rating">{'★'.repeat(concert.rating ?? 0)}{'☆'.repeat(5 - (concert.rating ?? 0))}</a>
 				{:else if !past}
 					<span class="days-badge">{daysUntil(concert.date)}d away</span>
 				{/if}
@@ -110,7 +110,9 @@
 		font-size: 13px;
 		color: #f59e0b;
 		letter-spacing: 1px;
+		text-decoration: none;
 	}
+	.rating:hover { opacity: 0.75; }
 
 	.days-badge {
 		font-size: 11px;

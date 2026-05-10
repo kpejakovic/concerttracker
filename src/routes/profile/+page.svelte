@@ -169,10 +169,11 @@
 				<span class="stat-value">{cities.length}</span>
 				<span class="stat-label">Cities</span>
 			</div>
-			<div class="stat-card">
+			<a href="/rate" class="stat-card clickable">
 				<span class="stat-value">{avgRating}</span>
 				<span class="stat-label">Avg ★</span>
-			</div>
+				<span class="stat-hint">Rate concerts →</span>
+			</a>
 		</div>
 
 		<!-- ── Favourite genres (interactive) ── -->
@@ -385,6 +386,21 @@
 	}
 	.stat-value { font-size: 28px; font-weight: 800; color: #111827; letter-spacing: -1px; }
 	.stat-label { font-size: 11px; font-weight: 600; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.05em; }
+
+	.stat-card.clickable {
+		text-decoration: none;
+		cursor: pointer;
+		border: 2px solid transparent;
+		transition: border-color 0.15s, box-shadow 0.15s;
+	}
+	.stat-card.clickable:active { border-color: #2563eb; box-shadow: 0 2px 12px rgba(37,99,235,0.15); }
+
+	.stat-hint {
+		font-size: 10px;
+		font-weight: 600;
+		color: #2563eb;
+		margin-top: 2px;
+	}
 
 	/* Genre picker */
 	.section-label {
