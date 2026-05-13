@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir \"c:\\\\Users\\\\krist\\\\Projekte PT\\\\concerttracker\\\\src\\\\routes\\\\concert\\\\[id]\")"
+    ],
+    "additionalDirectories": [
+      "c:\\Users\\krist\\Projekte PT\\concerttracker\\src\\routes\\concert"
+    ]
+  }
+}

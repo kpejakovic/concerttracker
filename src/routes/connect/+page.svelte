@@ -2,7 +2,6 @@
 	import { concertStore } from '$lib/stores/concerts.svelte.js';
 	import { browser } from '$app/environment';
 
-	// ── Mock community data ────────────────────────────────────────────────────
 	const mockUsers = {
 		6:  ['Sarah M.', 'Max K.', 'Julia R.', 'Tom B.', 'Anna S.'],
 		7:  ['Felix H.', 'Lisa N.', 'David P.'],
@@ -36,13 +35,11 @@
 		]
 	};
 
-	// ── State ──────────────────────────────────────────────────────────────────
 	const today = new Date();
 
-	let view = $state('list'); // 'list' | 'chat'
+	let view = $state('list');
 	let selectedConcert = $state(null);
 
-	// which concert ids the user has joined
 	let joined = $state(
 		new Set(browser ? JSON.parse(localStorage.getItem('connect-joined') ?? '[]') : [])
 	);
@@ -54,7 +51,7 @@
 	function toggleJoin(id) {
 		if (joined.has(id)) joined.delete(id);
 		else joined.add(id);
-		joined = new Set(joined); // trigger reactivity
+		joined = new Set(joined);
 		persistJoined();
 	}
 
@@ -68,7 +65,6 @@
 		selectedConcert = null;
 	}
 
-	// ── Chat logic ─────────────────────────────────────────────────────────────
 	let chatInput = $state('');
 	let messagesEl = $state(null);
 
@@ -88,7 +84,6 @@
 
 	$effect(() => {
 		if (messagesEl && messages.length) {
-			// scroll to bottom when messages change
 			setTimeout(() => { if (messagesEl) messagesEl.scrollTop = messagesEl.scrollHeight; }, 0);
 		}
 	});
@@ -101,7 +96,6 @@
 		messages = [...messages, msg];
 		chatInput = '';
 
-		// persist user messages only
 		const stored = browser
 			? JSON.parse(localStorage.getItem(`chat-${selectedConcert.id}`) ?? '[]')
 			: [];
@@ -113,7 +107,6 @@
 		if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
 	}
 
-	// ── Derived ────────────────────────────────────────────────────────────────
 	let upcomingConcerts = $derived(
 		concertStore.items
 			.filter((c) => new Date(c.date) >= today)
@@ -132,200 +125,143 @@
 	}
 </script>
 
-{#if view === 'list'}
-	<!-- ── Concert list ── -->
-	<header class="header">
-		<h1 class="title">Connect</h1>
-		<p class="subtitle">Find people going to the same shows</p>
-	</header>
+<div class="container-xl py-4">
+	{#if view === 'list'}
+		<div class="mb-4">
+			<h1 class="h3 fw-bold mb-1">Connect</h1>
+			<p class="text-muted mb-0">Find people going to the same shows</p>
+		</div>
 
-	<div class="list">
 		{#if upcomingConcerts.length === 0}
-			<div class="empty">No upcoming concerts. Add some on the Home tab!</div>
+			<div class="text-center py-5 text-muted">
+				<div class="fs-1 mb-2">🎟️</div>
+				<p>No upcoming concerts. Add some on the Explore page!</p>
+			</div>
 		{:else}
-			{#each upcomingConcerts as concert (concert.id)}
-				{@const count = attendeeCount(concert.id)}
-				{@const isJoined = joined.has(concert.id)}
-				<div class="concert-row">
-					<button class="concert-info" onclick={() => openChat(concert)}>
-						<div class="concert-main">
-							<span class="concert-artist">{concert.artist}</span>
-							<span class="concert-meta">{concert.venue} · {concert.city}</span>
-							<span class="concert-date">{formatDate(concert.date)}</span>
-						</div>
-						<div class="concert-right">
-							<div class="attendees">
-								<span class="attendee-count">{count}</span>
-								<span class="attendee-label">going</span>
+			<div class="row g-3">
+				{#each upcomingConcerts as concert (concert.id)}
+					{@const count = attendeeCount(concert.id)}
+					{@const isJoined = joined.has(concert.id)}
+					<div class="col-12 col-md-6 col-lg-4">
+						<div class="card border-0 shadow-sm h-100">
+							<div class="card-body">
+								<div class="d-flex justify-content-between align-items-start mb-2">
+									<div class="flex-grow-1 min-w-0 me-3">
+										<h5 class="fw-bold mb-1 text-truncate">{concert.artist}</h5>
+										<div class="text-muted small">{concert.venue} · {concert.city}</div>
+										<div class="text-muted" style="font-size:12px;">{formatDate(concert.date)}</div>
+									</div>
+									<div class="text-center flex-shrink-0">
+										<div class="fw-bold text-primary" style="font-size:22px;line-height:1;">{count}</div>
+										<div class="text-muted" style="font-size:11px;font-weight:600;">going</div>
+									</div>
+								</div>
+
+								<!-- Mini avatars -->
+								<div class="d-flex align-items-center gap-2 mb-3">
+									<div class="avatars-row">
+										{#each (mockUsers[concert.id] ?? []).slice(0, 4) as name}
+											<div class="mini-avatar" title={name}>{name[0]}</div>
+										{/each}
+										{#if isJoined}
+											<div class="mini-avatar you" title="You">Y</div>
+										{/if}
+									</div>
+								</div>
+
+								<div class="d-flex gap-2">
+									<button
+										class="btn btn-sm flex-grow-1"
+										class:btn-primary={isJoined}
+										class:btn-outline-primary={!isJoined}
+										onclick={() => toggleJoin(concert.id)}
+									>
+										{isJoined ? '✓ Going' : '+ Join'}
+									</button>
+									<button class="btn btn-sm btn-outline-secondary" onclick={() => openChat(concert)}>
+										Chat →
+									</button>
+								</div>
 							</div>
-							<svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-								<path d="M9 18l6-6-6-6"/>
+						</div>
+					</div>
+				{/each}
+			</div>
+		{/if}
+
+	{:else}
+		<!-- Chat view -->
+		<div class="row justify-content-center">
+			<div class="col-12 col-lg-8 col-xl-6">
+				<div class="card border-0 shadow-sm" style="height:calc(100vh - 160px);display:flex;flex-direction:column;">
+					<div class="card-header bg-white d-flex align-items-center gap-3">
+						<button class="btn btn-sm btn-outline-secondary rounded-circle" onclick={closeChat} style="width:34px;height:34px;padding:0;">
+							<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+								<path d="M15 18l-6-6 6-6"/>
 							</svg>
+						</button>
+						<div>
+							<div class="fw-bold">{selectedConcert?.artist}</div>
+							<div class="text-muted small">{selectedConcert?.city} · {attendeeCount(selectedConcert?.id)} going</div>
 						</div>
-					</button>
-					<div class="join-row">
-						<div class="avatars">
-							{#each (mockUsers[concert.id] ?? []).slice(0, 4) as name}
-								<div class="mini-avatar" title={name}>{name[0]}</div>
-							{/each}
-							{#if isJoined}
-								<div class="mini-avatar you" title="You">Y</div>
-							{/if}
-						</div>
+					</div>
+
+					<div class="card-body overflow-auto d-flex flex-column gap-3 py-3" bind:this={messagesEl}>
+						{#each messages as msg (msg.id)}
+							<div class="d-flex align-items-end gap-2" class:flex-row-reverse={msg.mine}>
+								{#if !msg.mine}
+									<div class="mini-avatar flex-shrink-0">{msg.user[0]}</div>
+								{/if}
+								<div class="d-flex flex-column" class:align-items-end={msg.mine} style="max-width:70%;">
+									{#if !msg.mine}
+										<span class="text-muted mb-1" style="font-size:11px;font-weight:600;">{msg.user}</span>
+									{/if}
+									<div
+										class="px-3 py-2 rounded-3"
+										style="{msg.mine
+											? 'background:#2563eb;color:#fff;border-radius:16px 16px 4px 16px !important;'
+											: 'background:#f3f4f6;color:#111827;border-radius:16px 16px 16px 4px !important;'}
+											font-size:14px;line-height:1.4;"
+									>{msg.text}</div>
+									<span class="text-muted mt-1" style="font-size:10px;">{msg.timeStr}</span>
+								</div>
+							</div>
+						{/each}
+					</div>
+
+					<div class="card-footer bg-white d-flex gap-2 align-items-center">
+						<input
+							type="text"
+							class="form-control rounded-pill"
+							bind:value={chatInput}
+							placeholder="Message…"
+							onkeydown={onKeydown}
+						/>
 						<button
-							class="join-btn"
-							class:joined={isJoined}
-							onclick={() => toggleJoin(concert.id)}
+							class="btn btn-primary rounded-circle flex-shrink-0"
+							style="width:40px;height:40px;padding:0;"
+							onclick={sendMessage}
+							disabled={!chatInput.trim()}
 						>
-							{isJoined ? '✓ Going' : '+ Join'}
+							<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+								<path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+							</svg>
 						</button>
 					</div>
 				</div>
-			{/each}
-		{/if}
-	</div>
-
-{:else}
-	<!-- ── Chat view ── -->
-	<header class="chat-header">
-		<button class="back-btn" onclick={closeChat}>
-			<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-				<path d="M15 18l-6-6 6-6"/>
-			</svg>
-		</button>
-		<div class="chat-title">
-			<span class="chat-artist">{selectedConcert?.artist}</span>
-			<span class="chat-venue">{selectedConcert?.city} · {attendeeCount(selectedConcert?.id)} going</span>
-		</div>
-	</header>
-
-	<div class="messages" bind:this={messagesEl}>
-		{#each messages as msg (msg.id)}
-			<div class="msg-wrap" class:mine={msg.mine}>
-				{#if !msg.mine}
-					<div class="msg-avatar">{msg.user[0]}</div>
-				{/if}
-				<div class="msg-block">
-					{#if !msg.mine}
-						<span class="msg-user">{msg.user}</span>
-					{/if}
-					<div class="bubble" class:mine={msg.mine}>{msg.text}</div>
-					<span class="msg-time">{msg.timeStr}</span>
-				</div>
 			</div>
-		{/each}
-	</div>
-
-	<div class="input-bar">
-		<input
-			type="text"
-			bind:value={chatInput}
-			placeholder="Message…"
-			class="chat-input"
-			onkeydown={onKeydown}
-		/>
-		<button class="send-btn" onclick={sendMessage} disabled={!chatInput.trim()}>
-			<svg viewBox="0 0 24 24" fill="currentColor">
-				<path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
-			</svg>
-		</button>
-	</div>
-{/if}
+		</div>
+	{/if}
+</div>
 
 <style>
-	/* ── List view ── */
-	.header {
-		padding: 14px 20px 10px;
-		background: #fff;
-		border-bottom: 1px solid #e5e7eb;
-		flex-shrink: 0;
-	}
-	.title { font-size: 22px; font-weight: 800; color: #111827; letter-spacing: -0.5px; }
-	.subtitle { font-size: 12px; color: #9ca3af; margin-top: 2px; }
-
-	.list {
-		flex: 1;
-		overflow-y: auto;
-		padding: 12px 14px 16px;
-	}
-
-	.empty {
-		text-align: center;
-		color: #9ca3af;
-		font-size: 14px;
-		padding: 60px 20px;
-		line-height: 1.5;
-	}
-
-	.concert-row {
-		background: #fff;
-		border-radius: 16px;
-		margin-bottom: 12px;
-		box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-		overflow: hidden;
-	}
-
-	.concert-info {
-		width: 100%;
+	.avatars-row {
 		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		padding: 14px 14px 10px;
-		background: none;
-		border: none;
-		cursor: pointer;
-		text-align: left;
-		gap: 10px;
 	}
 
-	.concert-main {
-		display: flex;
-		flex-direction: column;
-		gap: 2px;
-		min-width: 0;
-	}
-
-	.concert-artist {
-		font-size: 16px;
-		font-weight: 700;
-		color: #111827;
-		white-space: nowrap;
-		overflow: hidden;
-		text-overflow: ellipsis;
-	}
-
-	.concert-meta { font-size: 12px; color: #6b7280; }
-	.concert-date { font-size: 11px; color: #9ca3af; }
-
-	.concert-right {
-		display: flex;
-		align-items: center;
-		gap: 8px;
-		flex-shrink: 0;
-	}
-
-	.attendees {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-	}
-	.attendee-count { font-size: 18px; font-weight: 800; color: #2563eb; }
-	.attendee-label { font-size: 10px; color: #9ca3af; font-weight: 600; }
-
-	.chevron { width: 16px; height: 16px; color: #d1d5db; }
-
-	.join-row {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		padding: 8px 14px 12px;
-		border-top: 1px solid #f3f4f6;
-	}
-
-	.avatars { display: flex; }
 	.mini-avatar {
-		width: 26px;
-		height: 26px;
+		width: 28px;
+		height: 28px;
 		border-radius: 50%;
 		background: #dbeafe;
 		color: #2563eb;
@@ -336,145 +272,8 @@
 		justify-content: center;
 		margin-left: -6px;
 		border: 2px solid #fff;
+		flex-shrink: 0;
 	}
 	.mini-avatar:first-child { margin-left: 0; }
 	.mini-avatar.you { background: #2563eb; color: #fff; }
-
-	.join-btn {
-		padding: 6px 16px;
-		border-radius: 20px;
-		font-size: 13px;
-		font-weight: 700;
-		border: 2px solid #2563eb;
-		color: #2563eb;
-		background: transparent;
-		cursor: pointer;
-		transition: background 0.15s, color 0.15s;
-	}
-	.join-btn.joined { background: #2563eb; color: #fff; }
-
-	/* ── Chat view ── */
-	.chat-header {
-		display: flex;
-		align-items: center;
-		gap: 10px;
-		padding: 12px 16px;
-		background: #fff;
-		border-bottom: 1px solid #e5e7eb;
-		flex-shrink: 0;
-	}
-
-	.back-btn {
-		background: #f3f4f6;
-		border: none;
-		width: 34px;
-		height: 34px;
-		border-radius: 50%;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		cursor: pointer;
-		flex-shrink: 0;
-	}
-	.back-btn svg { width: 18px; height: 18px; }
-
-	.chat-title { display: flex; flex-direction: column; min-width: 0; }
-	.chat-artist { font-size: 15px; font-weight: 700; color: #111827; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-	.chat-venue { font-size: 11px; color: #9ca3af; }
-
-	.messages {
-		flex: 1;
-		overflow-y: auto;
-		padding: 14px 14px 6px;
-		display: flex;
-		flex-direction: column;
-		gap: 12px;
-	}
-
-	.msg-wrap {
-		display: flex;
-		align-items: flex-end;
-		gap: 8px;
-	}
-	.msg-wrap.mine { flex-direction: row-reverse; }
-
-	.msg-avatar {
-		width: 28px;
-		height: 28px;
-		border-radius: 50%;
-		background: #dbeafe;
-		color: #2563eb;
-		font-size: 12px;
-		font-weight: 700;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		flex-shrink: 0;
-	}
-
-	.msg-block {
-		display: flex;
-		flex-direction: column;
-		max-width: 70%;
-	}
-	.msg-wrap.mine .msg-block { align-items: flex-end; }
-
-	.msg-user { font-size: 11px; font-weight: 600; color: #9ca3af; margin-bottom: 3px; }
-
-	.bubble {
-		background: #f3f4f6;
-		color: #111827;
-		padding: 8px 12px;
-		border-radius: 16px 16px 16px 4px;
-		font-size: 14px;
-		line-height: 1.4;
-	}
-	.bubble.mine {
-		background: #2563eb;
-		color: #fff;
-		border-radius: 16px 16px 4px 16px;
-	}
-
-	.msg-time { font-size: 10px; color: #d1d5db; margin-top: 3px; }
-
-	.input-bar {
-		display: flex;
-		align-items: center;
-		gap: 8px;
-		padding: 10px 14px;
-		background: #fff;
-		border-top: 1px solid #e5e7eb;
-		flex-shrink: 0;
-	}
-
-	.chat-input {
-		flex: 1;
-		padding: 10px 14px;
-		border: 1.5px solid #e5e7eb;
-		border-radius: 22px;
-		font-size: 14px;
-		outline: none;
-		font-family: inherit;
-		color: #111827;
-		background: #f9fafb;
-		transition: border-color 0.15s;
-	}
-	.chat-input:focus { border-color: #2563eb; background: #fff; }
-
-	.send-btn {
-		width: 38px;
-		height: 38px;
-		border-radius: 50%;
-		background: #2563eb;
-		border: none;
-		cursor: pointer;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		flex-shrink: 0;
-		color: #fff;
-		transition: opacity 0.15s;
-	}
-	.send-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-	.send-btn svg { width: 18px; height: 18px; }
 </style>

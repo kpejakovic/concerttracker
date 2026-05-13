@@ -4,7 +4,6 @@
 	import AddConcertModal from '$lib/components/AddConcertModal.svelte';
 
 	let showModal = $state(false);
-	let showSearch = $state(false);
 	let search = $state('');
 	let activeGenre = $state('All');
 
@@ -49,89 +48,73 @@
 			weekday: 'short', day: 'numeric', month: 'short', year: 'numeric'
 		});
 	}
-
-	function toggleSearch() {
-		showSearch = !showSearch;
-		if (!showSearch) search = '';
-	}
 </script>
 
-<header class="header">
-	<div class="header-row">
-		<div class="header-left">
-			<h1 class="title">Explore Concerts</h1>
-			<p class="subtitle">{filtered.length} upcoming concerts</p>
+<div class="container-xl py-4">
+	<!-- Page header -->
+	<div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+		<div>
+			<h1 class="h3 fw-bold mb-0">Explore Concerts</h1>
+			<p class="text-muted small mb-0">{filtered.length} upcoming concerts</p>
 		</div>
-		<div class="header-actions">
-			<button class="icon-btn" class:active={showSearch} onclick={toggleSearch} aria-label="Search">
-				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-					stroke-linecap="round" stroke-linejoin="round">
-					<circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
-				</svg>
-			</button>
-			<button class="add-btn" onclick={() => (showModal = true)} aria-label="Add concert">+</button>
-		</div>
+		<button class="btn btn-primary" onclick={() => (showModal = true)}>+ Add Concert</button>
 	</div>
 
-	{#if showSearch}
-		<div class="search-wrap">
-			<svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-				stroke-linecap="round" stroke-linejoin="round">
-				<circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
-			</svg>
-			<input
-				class="search-input"
-				type="search"
-				placeholder="Artist, venue or city…"
-				bind:value={search}
-				autofocus
-			/>
-		</div>
-	{/if}
-</header>
+	<!-- Search -->
+	<div class="mb-3">
+		<input
+			class="form-control"
+			type="search"
+			placeholder="Search by artist, venue or city…"
+			bind:value={search}
+		/>
+	</div>
 
-<div class="genre-bar">
-	{#each genres as g}
-		<button class="chip" class:active={activeGenre === g} onclick={() => (activeGenre = g)}>{g}</button>
-	{/each}
-</div>
+	<!-- Genre filter chips -->
+	<div class="genre-bar mb-4">
+		{#each genres as g}
+			<button
+				class="chip"
+				class:active={activeGenre === g}
+				onclick={() => (activeGenre = g)}
+			>{g}</button>
+		{/each}
+	</div>
 
-<main class="list">
+	<!-- Concert grid -->
 	{#if filtered.length === 0}
-		<div class="empty">
-			<span class="empty-icon">🔍</span>
+		<div class="text-center py-5 text-muted">
+			<div class="fs-1 mb-2">🔍</div>
 			<p>No concerts match your search.</p>
 		</div>
 	{:else}
-		{#each filtered as concert (concert.id)}
-			{@const saved = isSaved(concert.id)}
-			{@const color = genreColor[concert.genre] ?? '#9ca3af'}
-			<article class="card">
-				<div class="card-accent" style="background:{color}"></div>
-				<div class="card-body">
-					<div class="card-top">
-						<span class="genre-tag" style="color:{color};background:{color}1a">{concert.genre}</span>
-						<button
-							class="save-btn"
-							class:saved
-							onclick={() => toggleSave(concert)}
-							aria-label={saved ? 'Remove from list' : 'Save to list'}
-						>
-							{#if saved}
-								Going ✓
-							{:else}
-								Save
-							{/if}
-						</button>
+		<div class="row g-3">
+			{#each filtered as concert (concert.id)}
+				{@const saved = isSaved(concert.id)}
+				{@const color = genreColor[concert.genre] ?? '#9ca3af'}
+				<div class="col-12 col-md-6 col-lg-4">
+					<div class="concert-card h-100">
+						<div class="card-accent" style="background:{color}"></div>
+						<div class="card-body-inner">
+							<div class="d-flex justify-content-between align-items-center mb-2">
+								<span class="genre-tag" style="color:{color};background:{color}1a">{concert.genre}</span>
+								<button
+									class="save-btn"
+									class:saved
+									onclick={() => toggleSave(concert)}
+								>{saved ? 'Going ✓' : 'Save'}</button>
+							</div>
+							<h2 class="concert-artist">{concert.artist}</h2>
+							<div class="concert-meta">{concert.venue} · {concert.city}</div>
+							<div class="concert-date">{formatDate(concert.date)}</div>
+							<a href="/concert/{concert.id}" class="detail-link mt-auto pt-2">View details →</a>
+						</div>
 					</div>
-					<h2 class="artist">{concert.artist}</h2>
-					<div class="meta">{concert.venue} · {concert.city}</div>
-					<div class="date">{formatDate(concert.date)}</div>
 				</div>
-			</article>
-		{/each}
+			{/each}
+		</div>
 	{/if}
-</main>
+</div>
 
 <AddConcertModal
 	open={showModal}
@@ -140,117 +123,21 @@
 />
 
 <style>
-	.header {
-		padding: 12px 16px 10px;
-		background: #fff;
-		border-bottom: 1px solid #e5e7eb;
-		flex-shrink: 0;
-	}
-
-	.header-row {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		margin-bottom: 2px;
-	}
-
-	.title {
-		font-size: 24px;
-		font-weight: 800;
-		color: #111827;
-		letter-spacing: -0.5px;
-		line-height: 1;
-	}
-
-	.subtitle {
-		font-size: 12px;
-		color: #9ca3af;
-		margin-top: 2px;
-	}
-
-	.header-actions {
-		display: flex;
-		align-items: center;
-		gap: 8px;
-	}
-
-	.icon-btn {
-		width: 36px;
-		height: 36px;
-		border-radius: 50%;
-		background: #f3f4f6;
-		border: none;
-		cursor: pointer;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		color: #374151;
-		transition: background 0.15s;
-	}
-	.icon-btn svg { width: 17px; height: 17px; }
-	.icon-btn.active { background: #dbeafe; color: #2563eb; }
-
-	.add-btn {
-		width: 36px;
-		height: 36px;
-		border-radius: 50%;
-		background: #2563eb;
-		color: #fff;
-		font-size: 24px;
-		font-weight: 300;
-		border: none;
-		cursor: pointer;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		transition: opacity 0.15s, transform 0.15s;
-	}
-	.add-btn:active { transform: scale(0.92); opacity: 0.85; }
-
-	.search-wrap {
-		display: flex;
-		align-items: center;
-		gap: 8px;
-		margin-top: 10px;
-		background: #f3f4f6;
-		border-radius: 12px;
-		padding: 0 12px;
-	}
-
-	.search-icon { width: 15px; height: 15px; color: #9ca3af; flex-shrink: 0; }
-
-	.search-input {
-		flex: 1;
-		border: none;
-		background: transparent;
-		padding: 10px 0;
-		font-size: 14px;
-		color: #111827;
-		outline: none;
-		font-family: inherit;
-	}
-	.search-input::placeholder { color: #9ca3af; }
-	.search-input::-webkit-search-cancel-button { display: none; }
-
-	/* Genre chips */
 	.genre-bar {
 		display: flex;
 		gap: 6px;
-		padding: 10px 14px;
 		overflow-x: auto;
-		flex-shrink: 0;
-		background: #fff;
-		border-bottom: 1px solid #f3f4f6;
 		scrollbar-width: none;
+		padding-bottom: 4px;
 	}
 	.genre-bar::-webkit-scrollbar { display: none; }
 
 	.chip {
-		padding: 5px 14px;
+		padding: 5px 16px;
 		border-radius: 20px;
-		font-size: 12px;
+		font-size: 13px;
 		font-weight: 600;
-		border: 1.5px solid #e5e7eb;
+		border: 1.5px solid #dee2e6;
 		background: #fff;
 		color: #6b7280;
 		cursor: pointer;
@@ -264,56 +151,33 @@
 		color: #fff;
 	}
 
-	/* List */
-	.list {
-		flex: 1;
-		padding: 12px 14px 20px;
-		overflow-y: auto;
-		-webkit-overflow-scrolling: touch;
-	}
-
-	.empty {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		gap: 10px;
-		padding: 60px 20px;
-		color: #9ca3af;
-		font-size: 14px;
-		text-align: center;
-	}
-	.empty-icon { font-size: 32px; }
-
-	/* Card */
-	.card {
+	.concert-card {
 		background: #fff;
-		border-radius: 16px;
-		margin-bottom: 10px;
+		border-radius: 12px;
+		box-shadow: 0 1px 6px rgba(0, 0, 0, 0.08);
 		display: flex;
 		overflow: hidden;
-		box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+		transition: box-shadow 0.15s, transform 0.15s;
+	}
+	.concert-card:hover {
+		box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+		transform: translateY(-2px);
 	}
 
 	.card-accent {
-		width: 4px;
+		width: 5px;
 		flex-shrink: 0;
 	}
 
-	.card-body {
-		padding: 12px 14px;
+	.card-body-inner {
+		padding: 14px 16px;
 		flex: 1;
-		min-width: 0;
-	}
-
-	.card-top {
 		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		margin-bottom: 6px;
+		flex-direction: column;
 	}
 
 	.genre-tag {
-		font-size: 10px;
+		font-size: 11px;
 		font-weight: 700;
 		text-transform: uppercase;
 		letter-spacing: 0.07em;
@@ -322,7 +186,7 @@
 	}
 
 	.save-btn {
-		font-size: 11px;
+		font-size: 12px;
 		font-weight: 700;
 		padding: 4px 12px;
 		border-radius: 20px;
@@ -338,29 +202,31 @@
 		border-color: #16a34a;
 		color: #fff;
 	}
-	.save-btn:active { opacity: 0.8; }
 
-	.artist {
+	.concert-artist {
 		font-size: 18px;
 		font-weight: 700;
 		color: #111827;
-		margin: 0 0 3px;
-		white-space: nowrap;
-		overflow: hidden;
-		text-overflow: ellipsis;
+		margin: 0 0 4px;
 	}
 
-	.meta {
-		font-size: 12px;
+	.concert-meta {
+		font-size: 13px;
 		color: #6b7280;
 		margin-bottom: 2px;
-		white-space: nowrap;
-		overflow: hidden;
-		text-overflow: ellipsis;
 	}
 
-	.date {
-		font-size: 11px;
+	.concert-date {
+		font-size: 12px;
 		color: #9ca3af;
 	}
+
+	.detail-link {
+		font-size: 13px;
+		font-weight: 600;
+		color: #2563eb;
+		text-decoration: none;
+		display: inline-block;
+	}
+	.detail-link:hover { text-decoration: underline; }
 </style>
