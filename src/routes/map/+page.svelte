@@ -1,7 +1,9 @@
 <script>
 	import { concertStore } from '$lib/stores/concerts.svelte.js';
 	import ConcertCard from '$lib/components/ConcertCard.svelte';
+	import AddConcertModal from '$lib/components/AddConcertModal.svelte';
 
+	let showModal = $state(false);
 	let mapEl = $state(null);
 	let mapInstance = null;
 	let view = $state('map');
@@ -22,6 +24,12 @@
 	);
 
 	let displayed = $derived(activeTab === 'upcoming' ? upcomingConcerts : pastConcerts);
+
+	$effect(() => {
+		if (view === 'map' && mapInstance) {
+			setTimeout(() => mapInstance.invalidateSize(), 10);
+		}
+	});
 
 	$effect(() => {
 		if (!mapEl) return;
@@ -93,6 +101,7 @@
 	<div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
 		<h1 class="h4 fw-bold mb-0">My Concerts</h1>
 		<div class="d-flex gap-2">
+			<button class="btn btn-primary btn-sm" onclick={() => (showModal = true)}>+ Add Concert</button>
 			<button
 				class="btn btn-sm"
 				class:btn-dark={view === 'map'}
@@ -179,11 +188,17 @@
 	</div>
 {/if}
 
+<AddConcertModal
+	open={showModal}
+	onclose={() => (showModal = false)}
+	onadd={(concert) => concertStore.add(concert)}
+/>
+
 <style>
 	.map-outer {
 		position: relative;
-		height: calc(100vh - 120px);
-		min-height: 400px;
+		height: calc(100vh - 130px);
+		min-height: 500px;
 	}
 
 	.map-el {
