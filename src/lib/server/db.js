@@ -1,11 +1,12 @@
 import { MongoClient } from 'mongodb';
-import { MONGODB_URI } from '$env/static/private';
+import { MONGODB_URI } from '$env/dynamic/private';
 
-const client = new MongoClient(MONGODB_URI);
+let client = null;
 let db = null;
 
 export async function connectDB() {
 	if (!db) {
+		client = new MongoClient(MONGODB_URI);
 		await client.connect();
 		db = client.db();
 	}
