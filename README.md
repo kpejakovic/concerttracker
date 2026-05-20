@@ -70,7 +70,7 @@ Fasst die technische Realisierung zusammen.
 - **Besondere Entscheidungen:** _[z. B. Trade-offs, Vereinfachungen]_  
 
 ### 3.5 Validate
-- **URL der getesteten Version** (separat deployt)test
+- **URL der getesteten Version** (separat deployt)test netfliy
 - **Ziele der Prüfung:** _[welche Fragen sollen beantwortet werden?]_  
 - **Vorgehen:** _[moderiert/unmoderiert; remote/on-site]_  
 - **Stichprobe:** _[Mit wem wurde getestet? Profil; Anzahl]_  
