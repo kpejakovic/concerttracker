@@ -1,45 +1,97 @@
 import { browser } from '$app/environment';
-import { concertsData } from '$lib/data/concerts.js';
 
-const STORAGE_KEY = 'concert-tracker-v1';
+function getStorageKey() {
+	if (!browser) return null;
+	try {
+		const raw = localStorage.getItem('ct-session');
+		if (!raw) return null;
+		const { email } = JSON.parse(raw);
+		return email ? `concerts-${email}` : null;
+	} catch {
+		return null;
+	}
+}
+
+function getUserEmail() {
+	if (!browser) return null;
+	try {
+		const raw = localStorage.getItem('ct-session');
+		if (!raw) return null;
+		return JSON.parse(raw).email ?? null;
+	} catch {
+		return null;
+	}
+}
+
+function apiHeaders() {
+	const email = getUserEmail();
+	return {
+		'Content-Type': 'application/json',
+		...(email ? { 'X-User-Email': email } : {})
+	};
+}
 
 function loadFromStorage() {
-	if (!browser) return concertsData;
-	const stored = localStorage.getItem(STORAGE_KEY);
-	if (!stored) return concertsData;
+	if (!browser) return [];
+	const key = getStorageKey();
+	if (!key) return [];
 	try {
-		const storedItems = JSON.parse(stored);
-		const storedIds = new Set(storedItems.map((c) => c.id));
-		const newDefaults = concertsData.filter((c) => !storedIds.has(c.id));
-		return [...storedItems, ...newDefaults];
+		return JSON.parse(localStorage.getItem(key) || '[]');
 	} catch {
-		return concertsData;
+		return [];
 	}
 }
 
 function createStore() {
 	let items = $state(loadFromStorage());
 
-	// On browser load, sync with MongoDB and replace local state
-	if (browser) {
-		fetch('/api/concerts')
-			.then((r) => (r.ok ? r.json() : null))
-			.then((data) => {
-				if (data && data.length > 0) {
-					items = data;
-					localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-				}
-			})
-			.catch(() => {});
-	}
-
 	function persist() {
-		if (browser) localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+		if (!browser) return;
+		const key = getStorageKey();
+		if (key) localStorage.setItem(key, JSON.stringify(items));
 	}
 
 	return {
 		get items() {
 			return items;
+		},
+
+		reload() {
+			items = loadFromStorage();
+		},
+
+		async syncWithServer() {
+			if (!browser) return;
+			try {
+				const local = loadFromStorage();
+				const res = await fetch('/api/concerts', { headers: apiHeaders() });
+				if (!res.ok) return;
+				const serverData = await res.json();
+				if (!Array.isArray(serverData)) return;
+
+				const serverIds = new Set(serverData.map((c) => c.id));
+				const unsynced = local.filter((c) => !serverIds.has(c.id));
+
+				await Promise.all(
+					unsynced.map((c) =>
+						fetch('/api/concerts', {
+							method: 'POST',
+							headers: apiHeaders(),
+							body: JSON.stringify(c)
+						}).catch(() => {})
+					)
+				);
+
+				const merged = [
+					...serverData,
+					...unsynced
+				];
+
+				if (merged.length > 0) {
+					items = merged;
+					persist();
+				}
+			} catch {}
 		},
 
 		add(concert) {
@@ -49,7 +101,7 @@ function createStore() {
 			if (browser) {
 				fetch('/api/concerts', {
 					method: 'POST',
-					headers: { 'Content-Type': 'application/json' },
+					headers: apiHeaders(),
 					body: JSON.stringify(item)
 				}).catch(() => {});
 			}
@@ -59,7 +111,10 @@ function createStore() {
 			items = items.filter((c) => c.id !== id);
 			persist();
 			if (browser) {
-				fetch(`/api/concerts/${id}`, { method: 'DELETE' }).catch(() => {});
+				fetch(`/api/concerts/${id}`, {
+					method: 'DELETE',
+					headers: apiHeaders()
+				}).catch(() => {});
 			}
 		},
 
@@ -71,7 +126,7 @@ function createStore() {
 			if (browser) {
 				fetch(`/api/concerts/${id}`, {
 					method: 'PATCH',
-					headers: { 'Content-Type': 'application/json' },
+					headers: apiHeaders(),
 					body: JSON.stringify({ rating, ...(notes !== undefined ? { notes } : {}) })
 				}).catch(() => {});
 			}

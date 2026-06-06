@@ -1,13 +1,10 @@
 import { MongoClient } from 'mongodb';
+import { DB_URI } from '$env/static/private';
 
-let client = null;
-let db = null;
+const client = new MongoClient(DB_URI);
 
-export async function connectDB() {
-	if (!db) {
-		client = new MongoClient(process.env.DB_URI);
-		await client.connect();
-		db = client.db();
-	}
-	return db;
-}
+await client.connect();
+
+const db = client.db('concerty');
+
+export { db };

@@ -39,7 +39,7 @@
 </script>
 
 <div class="container-xl py-4">
-	<a href="/" class="btn btn-outline-secondary btn-sm mb-4">← Back to Explore</a>
+	<a href="/" class="btn btn-outline-secondary btn-sm mb-4">← Back to My Concerts</a>
 
 	{#if concert}
 		{@const color = genreColor[concert.genre] ?? '#9ca3af'}
@@ -117,7 +117,7 @@
 						>
 							{isSaved ? '✓ Saved to My Concerts' : '+ Save to My Concerts'}
 						</button>
-						<a href="/map" class="btn btn-outline-secondary w-100">View on Map</a>
+						<a href="/" class="btn btn-outline-secondary w-100">View on Map</a>
 
 						{#if isSaved}
 							<hr />
@@ -131,7 +131,7 @@
 		<div class="text-center py-5 text-muted">
 			<div class="fs-1 mb-2">🔍</div>
 			<p>Concert not found.</p>
-			<a href="/" class="btn btn-primary mt-2">Back to Explore</a>
+			<a href="/" class="btn btn-primary mt-2">Back to My Concerts</a>
 		</div>
 	{/if}
 </div>

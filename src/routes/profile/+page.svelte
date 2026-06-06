@@ -5,21 +5,35 @@
 	const ALL_GENRES = ['Pop', 'Rock', 'Metal', 'Alt-Rock', 'Alt-Pop', 'R&B', 'Electronic', 'Hip-Hop', 'Jazz', 'Classical', 'Country', 'Other'];
 	const AVATAR_COLORS = ['#2563eb', '#7c3aed', '#db2777', '#059669', '#d97706', '#dc2626'];
 
-	function load(key, fallback) {
+	function getUserEmail() {
+		if (!browser) return null;
+		try {
+			const raw = localStorage.getItem('ct-session');
+			return raw ? (JSON.parse(raw).email ?? null) : null;
+		} catch { return null; }
+	}
+
+	function profileKey(field) {
+		const email = getUserEmail();
+		return email ? `profile-${email}-${field}` : `profile-${field}`;
+	}
+
+	function load(field, fallback) {
 		if (!browser) return fallback;
-		const v = localStorage.getItem(key);
+		const v = localStorage.getItem(profileKey(field));
 		if (v === null) return fallback;
 		try { return JSON.parse(v); } catch { return v; }
 	}
-	function save(key, val) {
-		if (browser) localStorage.setItem(key, JSON.stringify(val));
+
+	function save(field, val) {
+		if (browser) localStorage.setItem(profileKey(field), JSON.stringify(val));
 	}
 
-	let name        = $state(load('profile-name', ''));
-	let bio         = $state(load('profile-bio', ''));
-	let homeCity    = $state(load('profile-city', ''));
-	let avatarColor = $state(load('profile-color', AVATAR_COLORS[0]));
-	let favGenres   = $state(load('profile-genres', []));
+	let name        = $state(load('name', ''));
+	let bio         = $state(load('bio', ''));
+	let homeCity    = $state(load('city', ''));
+	let avatarColor = $state(load('color', AVATAR_COLORS[0]));
+	let favGenres   = $state(load('genres', []));
 
 	let editingName = $state(false);
 	let editingBio  = $state(false);
@@ -35,15 +49,15 @@
 		if (field === 'city') { tmpCity = homeCity; editingCity = true; }
 	}
 
-	function commitName() { name = tmpName.trim(); save('profile-name', name); editingName = false; }
-	function commitBio()  { bio  = tmpBio.trim();  save('profile-bio',  bio);  editingBio  = false; }
-	function commitCity() { homeCity = tmpCity.trim(); save('profile-city', homeCity); editingCity = false; }
+	function commitName() { name = tmpName.trim(); save('name', name); editingName = false; }
+	function commitBio()  { bio  = tmpBio.trim();  save('bio',  bio);  editingBio  = false; }
+	function commitCity() { homeCity = tmpCity.trim(); save('city', homeCity); editingCity = false; }
 
-	function setColor(c) { avatarColor = c; save('profile-color', c); }
+	function setColor(c) { avatarColor = c; save('color', c); }
 
 	function toggleGenre(g) {
 		favGenres = favGenres.includes(g) ? favGenres.filter((x) => x !== g) : [...favGenres, g];
-		save('profile-genres', favGenres);
+		save('genres', favGenres);
 	}
 
 	let initials = $derived(
