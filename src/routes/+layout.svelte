@@ -5,11 +5,13 @@
 	import favicon from '$lib/assets/favicon.svg';
 	import { authStore } from '$lib/stores/auth.svelte.js';
 	import { concertStore } from '$lib/stores/concerts.svelte.js';
+	import { artistStore } from '$lib/stores/artists.svelte.js';
 
 	let { children } = $props();
 
 	const navItems = [
 		{ href: '/', label: 'My Concerts' },
+		{ href: '/artists', label: 'Artists' },
 		{ href: '/explore', label: 'Explore' },
 		{ href: '/connect', label: 'Connect' },
 		{ href: '/profile', label: 'Profile' }
@@ -25,8 +27,16 @@
 	onMount(() => {
 		authStore.init();
 		concertStore.reload();
-		if (authStore.isLoggedIn) {
+		artistStore.reload();
+	});
+
+	// Sync once when auth confirmed
+	let syncDone = false;
+	$effect(() => {
+		if (authStore.isLoggedIn && authStore.initialized && !syncDone) {
+			syncDone = true;
 			concertStore.syncWithServer();
+			artistStore.syncWithServer();
 		}
 	});
 

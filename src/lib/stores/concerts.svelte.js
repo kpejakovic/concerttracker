@@ -130,6 +130,30 @@ function createStore() {
 					body: JSON.stringify({ rating, ...(notes !== undefined ? { notes } : {}) })
 				}).catch(() => {});
 			}
+		},
+
+		updateSetlist(id, setlist) {
+			items = items.map((c) => (c.id === id ? { ...c, setlist } : c));
+			persist();
+			if (browser) {
+				fetch(`/api/concerts/${id}`, {
+					method: 'PATCH',
+					headers: apiHeaders(),
+					body: JSON.stringify({ setlist })
+				}).catch(() => {});
+			}
+		},
+
+		updatePhotos(id, photos) {
+			items = items.map((c) => (c.id === id ? { ...c, photos } : c));
+			persist();
+			if (browser) {
+				fetch(`/api/concerts/${id}`, {
+					method: 'PATCH',
+					headers: apiHeaders(),
+					body: JSON.stringify({ photos })
+				}).catch(() => {});
+			}
 		}
 	};
 }
