@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" modified="2026-06-06" agent="Claude" version="21.0.0">
+  <diagram id="hauptworkflow" name="Hauptworkflow – Konzert tracken">
+    <mxGraphModel dx="1422" dy="762" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- START -->
+        <mxCell id="2" value="App öffnen" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="330" y="40" width="160" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- DECISION: Bereits angemeldet? -->
+        <mxCell id="3" value="Bereits angemeldet?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="310" y="130" width="200" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- Login / Registrierung -->
+        <mxCell id="4" value="Login / Registrierung" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="580" y="140" width="160" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- My Concerts Übersicht -->
+        <mxCell id="5" value="My Concerts (Übersicht)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="330" y="255" width="160" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- DECISION: Konzert in Liste? -->
+        <mxCell id="6" value="Konzert bereits in Liste?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="310" y="350" width="200" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- Explore -->
+        <mxCell id="7" value="Explore: Konzert entdecken" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="580" y="350" width="160" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Konzert speichern -->
+        <mxCell id="8" value="Konzert in My Concerts speichern" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="580" y="450" width="160" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Konzert-Detailansicht -->
+        <mxCell id="9" value="Konzert-Detailansicht öffnen" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="330" y="460" width="160" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- DECISION: Vergangen? -->
+        <mxCell id="10" value="Konzert bereits stattgefunden?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="310" y="560" width="200" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- Karte / Kalender -->
+        <mxCell id="11" value="Auf Karte / im Kalender anzeigen" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="60" y="570" width="170" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Bewertung -->
+        <mxCell id="12" value="Bewertung abgeben (1–5 ★)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="330" y="685" width="160" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Fotos -->
+        <mxCell id="13" value="Fotos hochladen" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="330" y="780" width="160" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Setlist -->
+        <mxCell id="14" value="Setlist eintragen" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="330" y="875" width="160" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- END -->
+        <mxCell id="15" value="Konzerterlebnis vollständig dokumentiert" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="295" y="975" width="230" height="55" as="geometry" />
+        </mxCell>
+
+        <!-- =================== EDGES =================== -->
+
+        <!-- Start → Decision Angemeldet -->
+        <mxCell id="20" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" source="2" target="3" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Decision Angemeldet: Ja → My Concerts -->
+        <mxCell id="21" value="Ja" style="edgeStyle=orthogonalEdgeStyle;html=1;fontStyle=1;fontSize=11;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" source="3" target="5" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Decision Angemeldet: Nein → Login -->
+        <mxCell id="22" value="Nein" style="edgeStyle=orthogonalEdgeStyle;html=1;fontStyle=1;fontSize=11;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="3" target="4" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Login → My Concerts -->
+        <mxCell id="23" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="4" target="5" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="660" y="230" />
+              <mxPoint x="490" y="230" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- My Concerts → Decision Konzert in Liste? -->
+        <mxCell id="24" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" source="5" target="6" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Decision Konzert in Liste: Nein → Explore -->
+        <mxCell id="25" value="Nein" style="edgeStyle=orthogonalEdgeStyle;html=1;fontStyle=1;fontSize=11;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="6" target="7" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Decision Konzert in Liste: Ja → Detailansicht -->
+        <mxCell id="26" value="Ja" style="edgeStyle=orthogonalEdgeStyle;html=1;fontStyle=1;fontSize=11;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" source="6" target="9" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Explore → Speichern -->
+        <mxCell id="27" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" source="7" target="8" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Speichern → Detailansicht -->
+        <mxCell id="28" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="8" target="9" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Detailansicht → Decision Vergangen? -->
+        <mxCell id="29" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" source="9" target="10" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Decision Vergangen: Nein → Karte/Kalender -->
+        <mxCell id="30" value="Nein&#xa;(bevorstehend)" style="edgeStyle=orthogonalEdgeStyle;html=1;fontStyle=1;fontSize=10;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" source="10" target="11" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Decision Vergangen: Ja → Bewertung -->
+        <mxCell id="31" value="Ja (vergangen)" style="edgeStyle=orthogonalEdgeStyle;html=1;fontStyle=1;fontSize=11;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" source="10" target="12" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Bewertung → Fotos -->
+        <mxCell id="32" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" source="12" target="13" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Fotos → Setlist -->
+        <mxCell id="33" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" source="13" target="14" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Setlist → End -->
+        <mxCell id="34" style="edgeStyle=orthogonalEdgeStyle;html=1;" edge="1" source="14" target="15" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

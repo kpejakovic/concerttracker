@@ -118,6 +118,18 @@ function createStore() {
 			}
 		},
 
+		update(id, fields) {
+			items = items.map((c) => (c.id === id ? { ...c, ...fields } : c));
+			persist();
+			if (browser) {
+				fetch(`/api/concerts/${id}`, {
+					method: 'PATCH',
+					headers: apiHeaders(),
+					body: JSON.stringify(fields)
+				}).catch(() => {});
+			}
+		},
+
 		rate(id, rating, notes) {
 			items = items.map((c) =>
 				c.id === id ? { ...c, rating, ...(notes !== undefined ? { notes } : {}) } : c

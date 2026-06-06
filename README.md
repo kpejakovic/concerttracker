@@ -65,7 +65,7 @@ Die Durchführung erfolgt phasenbasiert; hier sind die wichtigsten Ergebnisse je
 
 ### 3.3 Decide
 - **Gewählte Variante & Begründung:** Variante A (Liste) als Standard, ergänzt durch Karte und Kalender als optionale Ansichten. Die Liste ist am schnellsten nutzbar und erfordert keine zusätzlichen Assets. Karte und Kalender wurden als Tabs ergänzt, um den Mehrwert der anderen Varianten nicht zu verlieren. Entscheidungskriterien: Einfachheit, Geschwindigkeit, geringer Pflegeaufwand.
-- **End-to-End-Ablauf:** Nutzer registriert sich → loggt sich ein → entdeckt Konzerte in „Explore" oder fügt eigene hinzu → speichert Konzert in „My Concerts" → nach dem Konzert: fügt Bewertung, Fotos und Setlist hinzu → verwaltet Lieblingsartists auf der Artists-Seite
+- **End-to-End-Ablauf:** Nutzer registriert sich → loggt sich ein → entdeckt Konzerte in „Explore" oder fügt eigene hinzu → speichert Konzert in „My Concerts" → nach dem Konzert: fügt Bewertung, Fotos und Setlist hinzu → verwaltet Lieblingsartists auf der Artists-Seite. Der zentrale Workflow ist als Flussdiagramm dokumentiert: [workflow_hauptworkflow.drawio](workflow_hauptworkflow.drawio)
 - **Mockup:** Wireframes wurden als Handskizzen auf Papier erstellt und direkt in den Prototyp überführt; Figma Mockup Link: https://www.figma.com/design/jzatiOfbFIXRADEbOeUObt/Concert-Tracker-SW10?node-id=0-1&t=Nsag4oudscvTxSLF-1
 ![Mockup - Gezeichnet](image.png)
 
@@ -76,6 +76,7 @@ Die Durchführung erfolgt phasenbasiert; hier sind die wichtigsten Ergebnisse je
 Beschreibt die Gestaltung und Interaktion.
 > **Hinweis:** Hier wird der **Prototyp** beschrieben, nicht das **Mockup**.
 - **Informationsarchitektur:** Die App ist in fünf Hauptbereiche gegliedert, erreichbar über eine fixe Navbar: My Concerts (Übersicht eigener Konzerte), Artists (Lieblingsartists), Explore (Konzerte entdecken), Connect (Mit anderen Die ans Konzert gehen connecten) und Profile. Jedes Konzert hat eine eigene Detailseite unter `/concert/[id]`.
+![Navbar Navigation Pages](image-8.png)
 - **User Interface Design:**
   - **My Concerts:** Tabs für Listen-, Karten- und Kalenderansicht; vergangene Konzerte zeigen Bewertungssterne, Foto-Thumbnails und Kamera-Upload
   - **Detailseite:** Kompakte Informationskarte (Artist, Venue, Datum, Genre), darunter Fotoalbum mit Lightbox (Tastaturnavigation) und Setlist-Editor
@@ -193,7 +194,7 @@ Die folgende Deklaration ist verpflichtend und beschreibt den Einsatz von KI im 
 
 ### 6.1 KI-Tools
 - **Eingesetzte Tools**: Claude Code (Anthropic), Modell: claude-sonnet-4-6; direkt in VS Code über die Claude Code Extension integriert.
-- **Zweck & Umfang**: Claude Code wurde für die gesamte Implementierung des Projekts eingesetzt. Dazu gehören: Erstellung aller Svelte-Komponenten und API-Routes, Store-Architektur (Svelte 5 Runes), CSS-Styling, Fehleranalyse und Debugging. Nahezu alle Codezeilen wurden mit direkter KI-Unterstützung geschrieben oder überarbeitet. Zusätzlich führte Claude Code am Ende des Projekts einen vollständigen Build-Check (`npm run build`) durch, identifizierte dabei mehrere Accessibility-Warnungen (fehlende Label-Verknüpfungen, aria-labels bei Icon-Buttons, tabindex auf Lightbox-Overlay) und behob diese eigenständig.
+- **Zweck & Umfang**: Claude Code wurde für die gesamte Implementierung des Projekts eingesetzt. Dazu gehören: Erstellung aller Svelte-Komponenten und API-Routes, Store-Architektur (Svelte 5 Runes), CSS-Styling, Fehleranalyse und Debugging. Nahezu alle Codezeilen wurden mit direkter KI-Unterstützung geschrieben oder überarbeitet. Zusätzlich führte Claude Code am Ende des Projekts einen vollständigen Build-Check (`npm run build`) durch, identifizierte dabei mehrere Accessibility-Warnungen (fehlende Label-Verknüpfungen, aria-labels bei Icon-Buttons, tabindex auf Lightbox-Overlay) und behob diese eigenständig. Für das README wurde Claude acuh verwendet.
 - **Eigene Leistung (Abgrenzung):** Eigenständig erarbeitet wurden: die Konzeptidee und Problemdefinition, die Entscheidung über Funktionsumfang und Abgrenzung, die Auswahl des Tech-Stacks, das Formulieren aller Anforderungen und Korrekturen in Konversation mit der KI sowie das manuelle Testen und Validieren der Resultate im Browser. Die KI hat auf Basis dieser Vorgaben implementiert. Mongo Db Datenbank wurde selber erstellt aber mithilfe von Claude Code und der Fehleranalyse richtig verbunden.
 
 ### 6.2 Prompt-Vorgehen

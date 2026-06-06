@@ -93,6 +93,43 @@
 		});
 	}
 
+	const genres = ['Pop', 'Rock', 'Metal', 'Alt-Rock', 'Alt-Pop', 'R&B', 'Hip-Hop', 'Electronic', 'Jazz', 'Classical', 'Country', 'Other'];
+
+	let editing = $state(false);
+	let editArtist = $state('');
+	let editVenue = $state('');
+	let editCity = $state('');
+	let editDate = $state('');
+	let editGenre = $state('');
+	let editNotes = $state('');
+
+	function toDateInput(dateStr) {
+		try { return new Date(dateStr).toISOString().split('T')[0]; } catch { return dateStr; }
+	}
+
+	function startEdit() {
+		editArtist = concert.artist;
+		editVenue = concert.venue ?? '';
+		editCity = concert.city;
+		editDate = toDateInput(concert.date);
+		editGenre = concert.genre;
+		editNotes = concert.notes ?? '';
+		editing = true;
+	}
+
+	function saveEdit() {
+		if (!editArtist.trim()) return;
+		concertStore.update(concert.id, {
+			artist: editArtist.trim(),
+			venue: editVenue.trim(),
+			city: editCity.trim(),
+			date: editDate,
+			genre: editGenre,
+			notes: editNotes.trim()
+		});
+		editing = false;
+	}
+
 	async function handlePhotoUpload(event) {
 		const files = [...(event.target.files ?? [])];
 		if (!files.length) return;
@@ -112,6 +149,46 @@
 			<!-- Main detail card -->
 			<div class="col-12 col-lg-8">
 				<div class="card border-0 shadow-sm overflow-hidden">
+					{#if editing}
+						<!-- Edit form -->
+						<div class="card-body px-4 py-4">
+							<h5 class="fw-bold mb-3">Edit Concert</h5>
+							<div class="mb-3">
+								<label for="edit-artist" class="form-label small fw-semibold text-muted mb-1">Artist *</label>
+								<input id="edit-artist" class="form-control" type="text" bind:value={editArtist} onkeydown={(e) => e.key === 'Enter' && saveEdit()} />
+							</div>
+							<div class="row g-3 mb-3">
+								<div class="col-sm-6">
+									<label for="edit-venue" class="form-label small fw-semibold text-muted mb-1">Venue</label>
+									<input id="edit-venue" class="form-control" type="text" bind:value={editVenue} />
+								</div>
+								<div class="col-sm-6">
+									<label for="edit-city" class="form-label small fw-semibold text-muted mb-1">City *</label>
+									<input id="edit-city" class="form-control" type="text" bind:value={editCity} />
+								</div>
+							</div>
+							<div class="row g-3 mb-3">
+								<div class="col-sm-6">
+									<label for="edit-date" class="form-label small fw-semibold text-muted mb-1">Date *</label>
+									<input id="edit-date" class="form-control" type="date" bind:value={editDate} />
+								</div>
+								<div class="col-sm-6">
+									<label for="edit-genre" class="form-label small fw-semibold text-muted mb-1">Genre</label>
+									<select id="edit-genre" class="form-select" bind:value={editGenre}>
+										{#each genres as g}<option value={g}>{g}</option>{/each}
+									</select>
+								</div>
+							</div>
+							<div class="mb-4">
+								<label for="edit-notes" class="form-label small fw-semibold text-muted mb-1">Notes</label>
+								<textarea id="edit-notes" class="form-control" rows="2" bind:value={editNotes}></textarea>
+							</div>
+							<div class="d-flex gap-2">
+								<button class="btn btn-primary fw-semibold px-4" onclick={saveEdit} disabled={!editArtist.trim()}>Save changes</button>
+								<button class="btn btn-outline-secondary" onclick={() => (editing = false)}>Cancel</button>
+							</div>
+						</div>
+					{:else}
 					<div class="card-header-hero" style="border-left: 6px solid {color}; padding: 24px 28px 20px; background: #fff;">
 						<div class="d-flex align-items-center gap-2 mb-3">
 							<span
@@ -131,7 +208,7 @@
 						<div class="row g-3 border-top pt-3 mb-3">
 							<div class="col-6 col-sm-3">
 								<div class="text-uppercase text-muted small fw-bold mb-1" style="font-size:11px;letter-spacing:.06em;">Venue</div>
-								<div class="fw-semibold">{concert.venue}</div>
+								<div class="fw-semibold">{concert.venue || '—'}</div>
 							</div>
 							<div class="col-6 col-sm-3">
 								<div class="text-uppercase text-muted small fw-bold mb-1" style="font-size:11px;letter-spacing:.06em;">City</div>
@@ -221,6 +298,7 @@
 							</div>
 						{/if}
 					</div>
+					{/if}
 				</div>
 			</div>
 
@@ -241,6 +319,9 @@
 
 						{#if isSaved}
 							<hr />
+							<button class="btn btn-outline-secondary w-100 mb-2 fw-semibold" onclick={startEdit}>
+								✏ Edit Concert
+							</button>
 							<a href="/rate" class="btn btn-outline-warning w-100 fw-semibold">Rate this concert</a>
 						{/if}
 					</div>

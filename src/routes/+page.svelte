@@ -86,6 +86,44 @@
 		event.target.value = '';
 	}
 
+	// Edit concert
+	let editingId = $state(null);
+	let editArtist = $state('');
+	let editVenue = $state('');
+	let editCity = $state('');
+	let editDate = $state('');
+	let editGenre = $state('');
+	let editNotes = $state('');
+
+	function toDateInput(dateStr) {
+		try { return new Date(dateStr).toISOString().split('T')[0]; } catch { return dateStr; }
+	}
+
+	function startEdit(concert) {
+		editingId = concert.id;
+		editArtist = concert.artist;
+		editVenue = concert.venue;
+		editCity = concert.city;
+		editDate = toDateInput(concert.date);
+		editGenre = concert.genre;
+		editNotes = concert.notes ?? '';
+	}
+
+	function saveEdit() {
+		if (!editArtist.trim() || !editingId) return;
+		concertStore.update(editingId, {
+			artist: editArtist.trim(),
+			venue: editVenue.trim(),
+			city: editCity.trim(),
+			date: editDate,
+			genre: editGenre,
+			notes: editNotes.trim()
+		});
+		editingId = null;
+	}
+
+	function cancelEdit() { editingId = null; }
+
 	// Calendar
 	let calYear = $state(new Date().getFullYear());
 	let calMonth = $state(new Date().getMonth());
@@ -328,60 +366,107 @@
 					<div class="col-12 col-md-6 col-lg-4">
 						<div class="concert-card h-100">
 							<div class="card-accent" style="background:{color}"></div>
-							<div class="card-body-inner">
-								<div class="d-flex justify-content-between align-items-center mb-2">
-									<span class="genre-tag" style="color:{color};background:{color}1a">{concert.genre}</span>
-									{#if isPast}
-										<div class="stars-interactive">
-											{#each [1,2,3,4,5] as n}
-												<button
-													class="star-btn-sm"
-													onclick={() => concertStore.rate(concert.id, concert.rating === n ? 0 : n, concert.notes)}
-													title="{n} star{n > 1 ? 's' : ''}"
-												><span style="color:{n <= (concert.rating ?? 0) ? '#f59e0b' : '#e5e7eb'}">★</span></button>
-											{/each}
+							{#if editingId === concert.id}
+								<!-- Edit form -->
+								<div class="card-body-inner">
+									<input
+										class="form-control form-control-sm mb-2"
+										type="text"
+										placeholder="Artist"
+										bind:value={editArtist}
+										onkeydown={(e) => e.key === 'Enter' && saveEdit()}
+									/>
+									<div class="row g-1 mb-2">
+										<div class="col-6">
+											<input class="form-control form-control-sm" type="text" placeholder="Venue" bind:value={editVenue} />
 										</div>
-									{:else}
-										<span class="days-badge">{daysUntil(concert.date)}</span>
-									{/if}
+										<div class="col-6">
+											<input class="form-control form-control-sm" type="text" placeholder="City" bind:value={editCity} />
+										</div>
+									</div>
+									<div class="row g-1 mb-2">
+										<div class="col-6">
+											<input class="form-control form-control-sm" type="date" bind:value={editDate} />
+										</div>
+										<div class="col-6">
+											<select class="form-select form-select-sm" bind:value={editGenre}>
+												{#each Object.keys(genreColor) as g}
+													<option value={g}>{g}</option>
+												{/each}
+											</select>
+										</div>
+									</div>
+									<input
+										class="form-control form-control-sm mb-3"
+										type="text"
+										placeholder="Notes (optional)"
+										bind:value={editNotes}
+									/>
+									<div class="d-flex gap-2">
+										<button class="btn btn-primary btn-sm flex-fill" onclick={saveEdit} disabled={!editArtist.trim()}>✓ Save</button>
+										<button class="btn btn-outline-secondary btn-sm" onclick={cancelEdit}>Cancel</button>
+									</div>
 								</div>
-
-								<h2 class="concert-artist">{concert.artist}</h2>
-								<div class="concert-meta">{concert.venue} · {concert.city}</div>
-								<div class="concert-date">{formatDate(concert.date)}</div>
-
-								{#if isPast && concert.photos?.length}
-									<div class="photo-row">
-										{#each concert.photos.slice(0, 4) as photo, i}
-											<button class="photo-thumb" onclick={() => (lightboxSrc = photo)} title="Foto anzeigen">
-												<img src={photo} alt="Foto {i + 1}" />
-											</button>
-										{/each}
-										{#if concert.photos.length > 4}
-											<span class="photo-more">+{concert.photos.length - 4}</span>
+							{:else}
+								<!-- Normal view -->
+								<div class="card-body-inner">
+									<div class="d-flex justify-content-between align-items-center mb-2">
+										<span class="genre-tag" style="color:{color};background:{color}1a">{concert.genre}</span>
+										{#if isPast}
+											<div class="stars-interactive">
+												{#each [1,2,3,4,5] as n}
+													<button
+														class="star-btn-sm"
+														onclick={() => concertStore.rate(concert.id, concert.rating === n ? 0 : n, concert.notes)}
+														title="{n} star{n > 1 ? 's' : ''}"
+													><span style="color:{n <= (concert.rating ?? 0) ? '#f59e0b' : '#e5e7eb'}">★</span></button>
+												{/each}
+											</div>
+										{:else}
+											<span class="days-badge">{daysUntil(concert.date)}</span>
 										{/if}
 									</div>
-								{/if}
 
-								<div class="card-actions mt-auto pt-2">
-									<a href="/concert/{concert.id}" class="detail-link">View details →</a>
-									{#if isPast}
-										<label class="photo-upload-btn" title="Foto hinzufügen">
-											<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-											<input type="file" accept="image/*" class="visually-hidden" onchange={(e) => handlePhotoUpload(concert.id, e)} />
-										</label>
+									<h2 class="concert-artist">{concert.artist}</h2>
+									<div class="concert-meta">{concert.venue} · {concert.city}</div>
+									<div class="concert-date">{formatDate(concert.date)}</div>
+
+									{#if isPast && concert.photos?.length}
+										<div class="photo-row">
+											{#each concert.photos.slice(0, 4) as photo, i}
+												<button class="photo-thumb" onclick={() => (lightboxSrc = photo)} title="Foto anzeigen">
+													<img src={photo} alt="Foto {i + 1}" />
+												</button>
+											{/each}
+											{#if concert.photos.length > 4}
+												<span class="photo-more">+{concert.photos.length - 4}</span>
+											{/if}
+										</div>
 									{/if}
-									<button
-										class="delete-btn"
-										onclick={() => {
-											if (confirm(`Remove ${concert.artist} from your list?`)) {
-												concertStore.remove(concert.id);
-											}
-										}}
-										title="Remove"
-									>✕</button>
+
+									<div class="card-actions mt-auto pt-2">
+										<a href="/concert/{concert.id}" class="detail-link">View details →</a>
+										{#if isPast}
+											<label class="photo-upload-btn" title="Foto hinzufügen">
+												<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+												<input type="file" accept="image/*" class="visually-hidden" onchange={(e) => handlePhotoUpload(concert.id, e)} />
+											</label>
+										{/if}
+										<button class="edit-btn" onclick={() => startEdit(concert)} title="Edit">
+											<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+										</button>
+										<button
+											class="delete-btn"
+											onclick={() => {
+												if (confirm(`Remove ${concert.artist} from your list?`)) {
+													concertStore.remove(concert.id);
+												}
+											}}
+											title="Remove"
+										>✕</button>
+									</div>
 								</div>
-							</div>
+							{/if}
 						</div>
 					</div>
 				{/each}
@@ -666,6 +751,22 @@
 	.delete-btn:hover {
 		color: #ef4444;
 		background: #fef2f2;
+	}
+
+	.edit-btn {
+		background: none;
+		border: none;
+		color: #d1d5db;
+		cursor: pointer;
+		padding: 2px 6px;
+		border-radius: 6px;
+		display: flex;
+		align-items: center;
+		transition: color 0.15s, background 0.15s;
+	}
+	.edit-btn:hover {
+		color: #2563eb;
+		background: #eff6ff;
 	}
 
 	/* ── Map ────────────────────────────────────────────── */

@@ -19,8 +19,8 @@
 	const isPast = $derived(form.date && new Date(form.date) < new Date());
 
 	async function submit() {
-		if (!form.artist.trim() || !form.venue.trim() || !form.city.trim() || !form.date) {
-			error = 'Please fill in artist, venue, city and date.';
+		if (!form.artist.trim() || !form.city.trim() || !form.date) {
+			error = 'Please fill in artist, city and date.';
 			return;
 		}
 		submitting = true;
@@ -130,8 +130,8 @@
 			</label>
 
 			<label class="field">
-				<span>Venue *</span>
-				<input type="text" bind:value={form.venue} placeholder="e.g. Olympiastadion" />
+				<span>Venue</span>
+				<input type="text" bind:value={form.venue} placeholder="e.g. Olympiastadion (optional)" />
 			</label>
 
 			<div class="row">
