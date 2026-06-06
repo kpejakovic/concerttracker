@@ -184,6 +184,23 @@ Dokumentiert Erweiterungen über den Mindestumfang hinaus.
 - **Referenz:** Kap. 3.4.1 (UI Design – My Concerts)
 - **Aus Evaluation abgeleitet?:** Kalenderansicht war eine direkte Konsequenz aus dem Nutzerfeedback (Wunsch nach zeitlicher Übersicht) und die Tespersonen mochten die Map-View sehr.
 
+### 4.5 Connect-Seite (Mitkonzertgänger finden)
+- **Beschreibung & Nutzen:** Auf der Connect-Seite sehen Nutzerinnen und Nutzer ihre bevorstehenden Konzerte und können sich mit anderen Personen vernetzen, die dasselbe Konzert besuchen. Pro Konzert wird angezeigt, wie viele andere ebenfalls hingehen, und ein Gruppen-Chat erlaubt den direkten Austausch (z. B. Treffpunkt, Tickets, Tipps). Dies erweitert die App von einem persönlichen Tagebuch hin zu einer sozialen Komponente rund um Live-Musik.
+- **Wo umgesetzt:**
+  - **Frontend:** `src/routes/connect/+page.svelte` mit Konzertliste (nur bevorstehende), Teilnehmerliste und Chat-Ansicht pro Konzert
+  - **Backend/Datenbank:** Nutzt bestehenden Konzert-Store; Chat-Nachrichten und Mitglieder sind als realistische Mock-Daten hinterlegt
+- **Referenz:** Navbar-Eintrag „Connect"
+- **Aus Evaluation abgeleitet?:** Nein, eigenständig als soziale Erweiterung ergänzt, um den Community-Aspekt von Konzerten abzubilden.
+
+### 4.6 Rate-Seite (zentrale Bewertungsübersicht)
+- **Beschreibung & Nutzen:** Die Rate-Seite bietet eine dedizierte Übersicht aller vergangenen Konzerte, geordnet nach unbewerteten Einträgen zuerst. Nutzerinnen und Nutzer können Sternebewertungen (1–5) direkt setzen oder ändern und persönliche Notizen pro Konzert bearbeiten — ohne in die Detailseite wechseln zu müssen. Dies vereinfacht das nachträgliche Bewerten mehrerer Konzerte erheblich.
+- **Wo umgesetzt:**
+  - **Frontend:** `src/routes/rate/+page.svelte` mit sortierter Konzertliste, interaktiven Sternbuttons und Inline-Notiz-Editor
+  - **Backend:** PATCH-Endpunkt in `src/routes/api/concerts/[id]/+server.js` (Felder `rating` und `notes`)
+  - **Datenbank:** `rating` (Number) und `notes` (String) im Konzert-Dokument in MongoDB Atlas
+- **Referenz:** Kap. 3.4.1 (UI Design – Detailseite)
+- **Aus Evaluation abgeleitet?:** Teilweise, es wurde erwähnt von einer Testperson, dass Notizen zum Konzert eine tolle Zusatzfunktion wären.
+
 ## 5. Projektorganisation [Optional]
 - **Repository & Struktur:** GitHub-Repository: https://github.com/kpejakovic/concerttracker.git; Struktur folgt dem SvelteKit-Standard mit `src/routes/` für Seiten und API-Routes sowie `src/lib/` für Stores und Assets.
 - **Issue-Management:** Anforderungen und Erweiterungen wurden im Verlauf des Projekts direkt als Aufgaben im Gespräch mit Claude Code definiert und iterativ umgesetzt. Issue Tracking wurde im Github als Ticketing system erstellt um nichts zu vergessen und den Entwicklungen zu verfolgen.
