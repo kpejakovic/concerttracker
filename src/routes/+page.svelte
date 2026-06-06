@@ -463,7 +463,7 @@
 
 {#if lightboxSrc}
 	<button class="lightbox-overlay" onclick={() => (lightboxSrc = null)}>
-		<img src={lightboxSrc} class="lightbox-img" alt="Concert photo" />
+		<img src={lightboxSrc} class="lightbox-img" alt="" />
 	</button>
 {/if}
 

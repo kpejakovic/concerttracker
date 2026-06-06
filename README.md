@@ -193,7 +193,7 @@ Die folgende Deklaration ist verpflichtend und beschreibt den Einsatz von KI im 
 
 ### 6.1 KI-Tools
 - **Eingesetzte Tools**: Claude Code (Anthropic), Modell: claude-sonnet-4-6; direkt in VS Code über die Claude Code Extension integriert.
-- **Zweck & Umfang**: Claude Code wurde für die gesamte Implementierung des Projekts eingesetzt. Dazu gehören: Erstellung aller Svelte-Komponenten und API-Routes, Store-Architektur (Svelte 5 Runes), CSS-Styling, Fehleranalyse und Debugging. Nahezu alle Codezeilen wurden mit direkter KI-Unterstützung geschrieben oder überarbeitet.
+- **Zweck & Umfang**: Claude Code wurde für die gesamte Implementierung des Projekts eingesetzt. Dazu gehören: Erstellung aller Svelte-Komponenten und API-Routes, Store-Architektur (Svelte 5 Runes), CSS-Styling, Fehleranalyse und Debugging. Nahezu alle Codezeilen wurden mit direkter KI-Unterstützung geschrieben oder überarbeitet. Zusätzlich führte Claude Code am Ende des Projekts einen vollständigen Build-Check (`npm run build`) durch, identifizierte dabei mehrere Accessibility-Warnungen (fehlende Label-Verknüpfungen, aria-labels bei Icon-Buttons, tabindex auf Lightbox-Overlay) und behob diese eigenständig.
 - **Eigene Leistung (Abgrenzung):** Eigenständig erarbeitet wurden: die Konzeptidee und Problemdefinition, die Entscheidung über Funktionsumfang und Abgrenzung, die Auswahl des Tech-Stacks, das Formulieren aller Anforderungen und Korrekturen in Konversation mit der KI sowie das manuelle Testen und Validieren der Resultate im Browser. Die KI hat auf Basis dieser Vorgaben implementiert. Mongo Db Datenbank wurde selber erstellt aber mithilfe von Claude Code und der Fehleranalyse richtig verbunden.
 
 ### 6.2 Prompt-Vorgehen

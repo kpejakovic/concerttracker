@@ -259,7 +259,7 @@
 <svelte:window onkeydown={handleKeydown} />
 
 {#if lightboxIndex !== null}
-	<div class="lightbox-overlay" onclick={closeLightbox} role="dialog" aria-modal="true">
+	<div class="lightbox-overlay" onclick={closeLightbox} onkeydown={(e) => e.key === 'Escape' && closeLightbox()} role="dialog" aria-modal="true" tabindex="0">
 		<button class="lightbox-close" onclick={closeLightbox} aria-label="Schließen">✕</button>
 
 		{#if (concert?.photos?.length ?? 0) > 1}
@@ -269,7 +269,7 @@
 		<img
 			src={lightboxSrc}
 			class="lightbox-img"
-			alt="Concert photo"
+			alt=""
 			onclick={(e) => e.stopPropagation()}
 		/>
 

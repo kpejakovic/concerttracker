@@ -195,7 +195,7 @@
 			<div class="col-12 col-lg-8 col-xl-6">
 				<div class="card border-0 shadow-sm" style="height:calc(100vh - 160px);display:flex;flex-direction:column;">
 					<div class="card-header bg-white d-flex align-items-center gap-3">
-						<button class="btn btn-sm btn-outline-secondary rounded-circle" onclick={closeChat} style="width:34px;height:34px;padding:0;">
+						<button class="btn btn-sm btn-outline-secondary rounded-circle" onclick={closeChat} style="width:34px;height:34px;padding:0;" aria-label="Zurück">
 							<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
 								<path d="M15 18l-6-6 6-6"/>
 							</svg>
@@ -242,6 +242,7 @@
 							style="width:40px;height:40px;padding:0;"
 							onclick={sendMessage}
 							disabled={!chatInput.trim()}
+							aria-label="Senden"
 						>
 							<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
 								<path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>

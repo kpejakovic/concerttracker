@@ -120,19 +120,19 @@
 		<div class="add-form mb-4">
 			<div class="row g-2 align-items-end">
 				<div class="col-12 col-sm-4">
-					<label class="form-label small fw-semibold text-muted mb-1">Artist name *</label>
+					<label for="new-name" class="form-label small fw-semibold text-muted mb-1">Artist name *</label>
 					<input
+						id="new-name"
 						class="form-control"
 						type="text"
 						placeholder="e.g. Radiohead"
 						bind:value={newName}
 						onkeydown={(e) => e.key === 'Enter' && addArtist()}
-						autofocus
 					/>
 				</div>
 				<div class="col-12 col-sm-3">
-					<label class="form-label small fw-semibold text-muted mb-1">Genre</label>
-					<select class="form-select" bind:value={newGenre}>
+					<label for="new-genre" class="form-label small fw-semibold text-muted mb-1">Genre</label>
+					<select id="new-genre" class="form-select" bind:value={newGenre}>
 						<option value="">— pick genre —</option>
 						{#each genres as g}
 							<option value={g}>{g}</option>
@@ -140,8 +140,9 @@
 					</select>
 				</div>
 				<div class="col-12 col-sm-3">
-					<label class="form-label small fw-semibold text-muted mb-1">Notes</label>
+					<label for="new-notes" class="form-label small fw-semibold text-muted mb-1">Notes</label>
 					<input
+						id="new-notes"
 						class="form-control"
 						type="text"
 						placeholder="Optional note…"
@@ -154,8 +155,9 @@
 					<button class="btn btn-outline-secondary" onclick={cancelForm}>✕</button>
 				</div>
 				<div class="col-12 col-sm-6">
-					<label class="form-label small fw-semibold text-muted mb-1">Spotify URL</label>
+					<label for="new-spotify" class="form-label small fw-semibold text-muted mb-1">Spotify URL</label>
 					<input
+						id="new-spotify"
 						class="form-control"
 						type="url"
 						placeholder="https://open.spotify.com/artist/…"
@@ -163,8 +165,9 @@
 					/>
 				</div>
 				<div class="col-12 col-sm-6">
-					<label class="form-label small fw-semibold text-muted mb-1">Apple Music URL</label>
+					<label for="new-apple" class="form-label small fw-semibold text-muted mb-1">Apple Music URL</label>
 					<input
+						id="new-apple"
 						class="form-control"
 						type="url"
 						placeholder="https://music.apple.com/…"
@@ -210,27 +213,27 @@
 						<div class="edit-row">
 							<div class="row g-2 align-items-end">
 								<div class="col-12 col-sm-3">
-									<label class="form-label small fw-semibold text-muted mb-1">Name *</label>
-									<input class="form-control form-control-sm" type="text" bind:value={editName} onkeydown={(e) => e.key === 'Enter' && saveEdit()} />
+									<label for="edit-name" class="form-label small fw-semibold text-muted mb-1">Name *</label>
+									<input id="edit-name" class="form-control form-control-sm" type="text" bind:value={editName} onkeydown={(e) => e.key === 'Enter' && saveEdit()} />
 								</div>
 								<div class="col-6 col-sm-2">
-									<label class="form-label small fw-semibold text-muted mb-1">Genre</label>
-									<select class="form-select form-select-sm" bind:value={editGenre}>
+									<label for="edit-genre" class="form-label small fw-semibold text-muted mb-1">Genre</label>
+									<select id="edit-genre" class="form-select form-select-sm" bind:value={editGenre}>
 										<option value="">—</option>
 										{#each genres as g}<option value={g}>{g}</option>{/each}
 									</select>
 								</div>
 								<div class="col-6 col-sm-2">
-									<label class="form-label small fw-semibold text-muted mb-1">Notes</label>
-									<input class="form-control form-control-sm" type="text" bind:value={editNotes} />
+									<label for="edit-notes" class="form-label small fw-semibold text-muted mb-1">Notes</label>
+									<input id="edit-notes" class="form-control form-control-sm" type="text" bind:value={editNotes} />
 								</div>
 								<div class="col-12 col-sm-2">
-									<label class="form-label small fw-semibold text-muted mb-1">Spotify</label>
-									<input class="form-control form-control-sm" type="url" placeholder="https://open.spotify.com/…" bind:value={editSpotify} />
+									<label for="edit-spotify" class="form-label small fw-semibold text-muted mb-1">Spotify</label>
+									<input id="edit-spotify" class="form-control form-control-sm" type="url" placeholder="https://open.spotify.com/…" bind:value={editSpotify} />
 								</div>
 								<div class="col-12 col-sm-2">
-									<label class="form-label small fw-semibold text-muted mb-1">Apple Music</label>
-									<input class="form-control form-control-sm" type="url" placeholder="https://music.apple.com/…" bind:value={editAppleMusic} />
+									<label for="edit-apple" class="form-label small fw-semibold text-muted mb-1">Apple Music</label>
+									<input id="edit-apple" class="form-control form-control-sm" type="url" placeholder="https://music.apple.com/…" bind:value={editAppleMusic} />
 								</div>
 								<div class="col-12 col-sm-1 d-flex gap-1">
 									<button class="btn btn-primary btn-sm flex-fill" onclick={saveEdit} disabled={!editName.trim()}>✓</button>
