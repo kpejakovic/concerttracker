@@ -35,7 +35,7 @@ Musikfans, die regelmässig Konzerte besuchen, haben keinen zentralen Ort, um ih
 
 
 ## 2. Lösungsidee
-Concerty ist eine webbasierte Applikation, bei der sich Nutzerinnen und Nutzer registrieren und einloggen können, um ihre Konzertdaten personalisiert zu speichern. Alle Daten werden pro Benutzer in MongoDB Atlas gespeichert und sind auf jedem Gerät verfügbar.
+Concerty ist eine webbasierte Applikation, bei der sich Nutzerinnen und Nutzer registrieren und einloggen können, um ihre Konzertdaten personalisiert zu speichern. Alle Daten werden pro Collections (concerts, artists) in der Datenbank gespeichert und sind auf jedem Gerät verfügbar.
 
 - **Kernfunktionalität:**
   - **Konzertverwaltung:** Konzerte aus einem Entdeckungsbereich übernehmen oder manuell hinzufügen; Ansicht als Liste, Karte (Leaflet) oder Kalender
@@ -43,10 +43,10 @@ Concerty ist eine webbasierte Applikation, bei der sich Nutzerinnen und Nutzer r
   - **Artists-Seite:** Lieblingsartists alphabetisch verwalten, Genre und Notizen pflegen, Spotify- und Apple-Music-Links hinterlegen
   - **Explore:** Konzerte entdecken und direkt in die eigene Liste übernehmen
 - **Annahmen [Optional]:** Nutzerinnen und Nutzer sind bereit, Konzertdaten manuell einzutragen, da keine externe Ticket- oder Event-API integriert ist.
-- **Abgrenzung [Optional]:** Kein Ticketkauf, kein soziales Netzwerk/Feed, keine Push-Benachrichtigungen, keine mobile App (nur responsives Web).
+- **Abgrenzung [Optional]:** Kein Ticketkauf, kein soziales Netzwerk/Feed, keine Push-Benachrichtigungen.
 
 ## 3. Vorgehen & Artefakte
-Die Durchführung erfolgt phasenbasiert; dokumentieren Sie die wichtigsten Ergebnisse je Phase.
+Die Durchführung erfolgt phasenbasiert; hier sind die wichtigsten Ergebnisse je Phase dokumentiert.
 
 ### 3.1 Understand & Define
 - **Zielgruppenverständnis:** Die primäre Zielgruppe sind junge Erwachsene, die aktiv Konzerte besuchen und ein digitales Gedächtnis für ihre Live-Erlebnisse suchen. Konzertgängerinnen und -gängern haben meistens ihre Fotos und Setlists als eine zentrale Erinnerung, die bisher verstreut in Kamera-Rolls, Notizen und sozialen Medien liegen. Eine Proto-Persona ist „Mia, 26, geht ca. 15 Konzerte pro Jahr, fotografiert viel, möchte wissen welche Artists sie wie oft gesehen hat".
@@ -57,10 +57,10 @@ Die Durchführung erfolgt phasenbasiert; dokumentieren Sie die wichtigsten Ergeb
   - Artists-Verwaltung mit direkten Streaming-Links spart Suche und Zeit
 
 ### 3.2 Sketch
-- **Variantenüberblick:** Drei grundlegende Varianten für die Hauptseite wurden skizziert: (A) einfache Liste, (B) Kachel-/Grid-Layout, (C) Kartenansicht als Standard.
+- **Variantenüberblick:** Drei grundlegende Varianten für die Hauptseite wurden skizziert: (A) einfache Liste - Kachel-/Grid-Layout, (B) Kalenderansicht (C) Kartenansicht.
 - **Skizzen:**
-  - **Variante A – Liste:** Kompakte Einträge mit Artist, Datum und Bewertung; schnell erfassbar, wenig visueller Aufwand
-  - **Variante B – Grid:** Kacheln mit Coverbild-Platzhalter; ansprechender, aber mehr Pflegeaufwand für Bilder
+  - **Variante A – Liste:** Kompakte Einträge mit Artist, Datum und Bewertung; schnell erfassbar, wenig visueller Aufwand, Kacheln mit Coverbild-Platzhalter; ansprechender, aber mehr Pflegeaufwand für Bilder
+  - **Variante B – Kalender:** Monatliche Kalenderüberischt mit Einträgen gemäss Konzertdaten
   - **Variante C – Karte:** Direkter geografischer Überblick; gut für Vielreisende, aber ungeeignet als Standardansicht für Nutzerinnen und Nutzer mit lokalen Konzerten
 
 ### 3.3 Decide
@@ -75,7 +75,7 @@ Die Durchführung erfolgt phasenbasiert; dokumentieren Sie die wichtigsten Ergeb
 #### 3.4.1. Entwurf (Design)
 Beschreibt die Gestaltung und Interaktion.
 > **Hinweis:** Hier wird der **Prototyp** beschrieben, nicht das **Mockup**.
-- **Informationsarchitektur:** Die App ist in fünf Hauptbereiche gegliedert, erreichbar über eine fixe Navbar: My Concerts (Übersicht eigener Konzerte), Artists (Lieblingsartists), Explore (Konzerte entdecken), Connect und Profile. Jedes Konzert hat eine eigene Detailseite unter `/concert/[id]`.
+- **Informationsarchitektur:** Die App ist in fünf Hauptbereiche gegliedert, erreichbar über eine fixe Navbar: My Concerts (Übersicht eigener Konzerte), Artists (Lieblingsartists), Explore (Konzerte entdecken), Connect (Mit anderen Die ans Konzert gehen connecten) und Profile. Jedes Konzert hat eine eigene Detailseite unter `/concert/[id]`.
 - **User Interface Design:**
   - **My Concerts:** Tabs für Listen-, Karten- und Kalenderansicht; vergangene Konzerte zeigen Bewertungssterne, Foto-Thumbnails und Kamera-Upload
   - **Detailseite:** Kompakte Informationskarte (Artist, Venue, Datum, Genre), darunter Fotoalbum mit Lightbox (Tastaturnavigation) und Setlist-Editor
@@ -106,7 +106,7 @@ Fasst die technische Realisierung zusammen.
   - `src/lib/stores/auth.svelte.js` – Lokale Authentifizierung (kein Server-Auth)
   - `src/routes/api/concerts/`, `src/routes/api/artists/` – REST-Endpunkte (GET, POST, PATCH, DELETE)
 - **Daten & Schnittstellen:**
-  - Daten werden pro Nutzer (`userEmail`) in MongoDB Atlas gespeichert
+  - Daten werden pro Nutzer (`userEmail`) in MongoDB Datenbank gespeichert
   - Client-seitige Stores cachen Daten in `localStorage` und synchronisieren beim Login mit dem Server
   - Fotos werden clientseitig via Canvas API auf max. 1200 px komprimiert und als base64-String in MongoDB gespeichert
   - API-Requests senden den eingeloggten Nutzer über den HTTP-Header `X-User-Email`
@@ -127,14 +127,14 @@ Fasst die technische Realisierung zusammen.
   4. Finde heraus, wie viele Konzerte du insgesamt besucht hast
 - **Kennzahlen & Beobachtungen:**
   - Aufgaben 1–2 wurden von allen Testpersonen erfolgreich abgeschlossen. Jedoch hatte die App kein erstes Fenster, um die Personen zu registrieren. Es war direkt einfach eine Profil Seite, dies hat Ihnen nicht gefallen, denn es wurde kein richtiges Konto hinterlegt.
-  Vorher: ![Profil ohne Login](image-1.png)
-  Nacher: ![Registrierung](image-2.png)
+   - **Vorher:** ![Profil ohne Login](image-1.png)
+   - **Nacher:** ![Registrierung](image-2.png)
   - Aufgabe 3 war nicht klar in welchem Tab man suchen musste.
-  Vorher:Meine Homepage war vorher direkt die Explore Seite und nicht die personalisierte My Concerts Seite. So sieht man seine Konzerte auf ersten Blick und kann bei einer anderen Seite Explore neues suchen mit verlinkten Seiten, die interessant sind für Musikfans.
+  - **Vorher:** Meine Homepage war vorher direkt die Explore Seite und nicht die personalisierte My Concerts Seite. So sieht man seine Konzerte auf ersten Blick und kann bei einer anderen Seite Explore neues suchen mit verlinkten Seiten, die interessant sind für Musikfans.
   ![Explore als Homepage - Alt](image-3.png)
-  Nacher: ![My Concerts als Homepage](image-4.png) & ![Explore Page Neu](image-5.png)
+  - **Nacher:** ![My Concerts als Homepage](image-4.png) & ![Explore Page Neu](image-5.png)
   - Aufgabe 4 wusste man nicht so recht wo man diese Information finden kann bei den Testpersonen
-- **Zusammenfassung der Resultate:** Die Kernfunktionen (Konzert hinzufügen, bewerten, Foto hochladen) sind intuitiv und wurden ohne Probleme gefunden. Der Registrierung und Login und die Explore Seite erforderten noch Verbesserungen. Der Unterschied zwischen My Concerts und Ecplore Page war nicht wirklich verständlich. Die App wurde insgesamt als übersichtlich und schnell wahrgenommen und schön gestaltet. Die Testpersonen fanden die Map-View cool.
+- **Zusammenfassung der Resultate:** Die Kernfunktionen (Konzert hinzufügen, bewerten, Foto hochladen) sind intuitiv und wurden ohne Probleme gefunden. Die Registrierung und Login und die Explore Seite erforderten noch Verbesserungen. Der Unterschied zwischen My Concerts und Explore Page war nicht wirklich verständlich. Die App wurde insgesamt als übersichtlich und schnell wahrgenommen und schön gestaltet. Die Testpersonen fanden die Map-View cool.
 - **Abgeleitete Verbesserungen:**
   1. *(Hoch)* Richtiges Registrierungs-/Login erstellen mit Name, Email und Passwort Eingabe
   2. *(Mittel)* My Concerts Seite und Explore Seite gut unterscheiden und Homepage sollte My Concerts sein, da auf ersten Blick das den Nutzer am meisten interessiert zu sehen.
@@ -146,12 +146,6 @@ Fasst die technische Realisierung zusammen.
 Dokumentiert Erweiterungen über den Mindestumfang hinaus.
 > **Hinweis:** Jede Erweiterung ist separat nach dem folgenden Schema zu beschreiben.
 
-### _[4.x Kurzbeschreibung / Titel]_  
-- **Beschreibung & Nutzen:** _[Was wurde erweitert? Warum?]_  
-- **Wo umgesetzt:** _[Wie und wo wurde es gemacht? Frontend, Backend, Datenbank?]_  
-- **Referenz:** _[Wo wird die Erweiterung auch noch beschrieben, z.B. Screenshot oder Beschreibung in einem anderen Kapitel]_  
-- **Aus Evaluation abgeleitet?:** _[Wurde diese Erweiterung als Folge eines in der Evaluation identifizierten Issues implementiert?]_  
-
 > Das folgende **Beispiel** wurde bewusst kurz gehalten. Erweiterungen dürfen auch ausführlicher beschrieben werden.
 
 ### 4.1 Fotoalbum mit Lightbox auf der Konzertdetailseite
@@ -161,7 +155,7 @@ Dokumentiert Erweiterungen über den Mindestumfang hinaus.
   - **Backend:** PATCH-Endpunkt in `src/routes/api/concerts/[id]/+server.js` (Feld `photos`)
   - **Datenbank:** `photos`-Array (base64-Strings) im Konzert-Dokument in MongoDB Atlas
 - **Referenz:** Kap. 3.4.1 (UI Design – Detailseite)
-- **Aus Evaluation abgeleitet?:** Teilweise – die Notwendigkeit eines Fotoalbums war von Anfang an geplant; die Lightbox-Navigation wurde nach Nutzerfeedback ergänzt.
+- **Aus Evaluation abgeleitet?:** Nein, dies wurde erst später implementiert.
 
 ### 4.2 Setlist-Editor auf der Konzertdetailseite
 - **Beschreibung & Nutzen:** Für vergangene, gespeicherte Konzerte können Songs der Setlist eingetragen, nummeriert angezeigt und einzeln wieder entfernt werden. Nutzerinnen und Nutzer können so das Konzerterlebnis vollständig dokumentieren.
@@ -187,7 +181,7 @@ Dokumentiert Erweiterungen über den Mindestumfang hinaus.
   - **Frontend:** Tab-Umschaltung und beide Ansichten in `src/routes/+page.svelte`; Kartenintegration via Leaflet; Kalender als reines CSS-Grid (7 Spalten)
   - **Backend/Datenbank:** Keine zusätzliche Backend-Logik; alle Daten kommen aus dem bestehenden Konzert-Store
 - **Referenz:** Kap. 3.4.1 (UI Design – My Concerts)
-- **Aus Evaluation abgeleitet?:** Kalenderansicht war eine direkte Konsequenz aus dem Nutzerfeedback (Wunsch nach zeitlicher Übersicht).
+- **Aus Evaluation abgeleitet?:** Kalenderansicht war eine direkte Konsequenz aus dem Nutzerfeedback (Wunsch nach zeitlicher Übersicht) und die Tespersonen mochten die Map-View sehr.
 
 ## 5. Projektorganisation [Optional]
 - **Repository & Struktur:** GitHub-Repository: https://github.com/kpejakovic/concerttracker.git; Struktur folgt dem SvelteKit-Standard mit `src/routes/` für Seiten und API-Routes sowie `src/lib/` für Stores und Assets.
