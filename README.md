@@ -66,6 +66,7 @@ Die Durchführung erfolgt phasenbasiert; hier sind die wichtigsten Ergebnisse je
 ### 3.3 Decide
 - **Gewählte Variante & Begründung:** Variante A (Liste) als Standard, ergänzt durch Karte und Kalender als optionale Ansichten. Die Liste ist am schnellsten nutzbar und erfordert keine zusätzlichen Assets. Karte und Kalender wurden als Tabs ergänzt, um den Mehrwert der anderen Varianten nicht zu verlieren. Entscheidungskriterien: Einfachheit, Geschwindigkeit, geringer Pflegeaufwand.
 - **End-to-End-Ablauf:** Nutzer registriert sich → loggt sich ein → entdeckt Konzerte in „Explore" oder fügt eigene hinzu → speichert Konzert in „My Concerts" → nach dem Konzert: fügt Bewertung, Fotos und Setlist hinzu → verwaltet Lieblingsartists auf der Artists-Seite. Der zentrale Workflow ist als Flussdiagramm dokumentiert: [workflow_hauptworkflow.drawio](workflow_hauptworkflow.drawio)
+![Flussdiagramm Workflow](workflow_hauptworkflow.png)
 - **Mockup:** Wireframes wurden als Handskizzen auf Papier erstellt und direkt in den Prototyp überführt; Figma Mockup Link: https://www.figma.com/design/jzatiOfbFIXRADEbOeUObt/Concert-Tracker-SW10?node-id=0-1&t=Nsag4oudscvTxSLF-1
 ![Mockup - Gezeichnet](image.png)
 
