@@ -224,3 +224,7 @@ Claude Code hat die Entwicklungsgeschwindigkeit erheblich gesteigert und ermögl
 - **Quellen:** Bootstrap 5 (MIT-Lizenz), Leaflet.js (BSD-Lizenz), SvelteKit (MIT-Lizenz), MongoDB Atlas (proprietär, kostenloser Tier); alle Icons sind SVG-Inline-Icons ohne externe Abhängigkeit.
 - **Testskript & Materialien:** Schriftliche Aufgabenkarten wurden für die Nutzertests mündlich übergeben.
 - **Rohdaten/Auswertung:** Beobachtungsnotizen aus den Nutzertests.
+- **Gebrauchte Fotos (Upload):**Gemacht von Kristina Pejakovic selber am 03.08.2025, London am Oasis Konzert
+-**Video Aufnahme:** Man hat es auf dem Video nicht gesehen, deswegen habe ich hier noch screen shots hinzugefügt bei der Erstellung von Konzerten. Es hat beim Datum und Genre eine Auswahlmöglichkeit.
+![Datum Auswahl](image-9.png)
+![Genre Auswahl](image-10.png)
